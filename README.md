@@ -1,0 +1,6 @@
+This is code for the game Bitburner.  Basic and Hive are spoiler free.  All other folders may contain midgame spoilers.  Basic usage is as follows:
+
+Run hive/swarm.js [maximum purchase server RAM] [worker threads] [memory decay coefficient] [memory decay rate (ms)]
+ex: run hive/swarm.js 4096 1 2 8000
+
+Then sit back and wait for the bees to optimize and hack the world.  Bees are more efficient on larger systems.  If you can't run a hive yet then use basic hack functions to slam n00dles until you can.  Recommendation is 1 thread per worker until 8TB ram, then 2 until 32TB RAM, scaling with 2 more on each subequent doubling.  Memory should start decaying faster as threads get really big, since waggles will also get bigger, but it's not really a concern until you are using about 8 threads.  The number of threads you want to use is dependent on your system specs, since port writes tax real life systems a bit so you don't want to be running millions of single thread workers. Decide where you want your numbers based on your system.  General rule of thumb when doing that is fatter bees = sharper decay coefficients with decay rates long enough to keep memories around while good waggles are coming in, but not so long your servers never fill up.
