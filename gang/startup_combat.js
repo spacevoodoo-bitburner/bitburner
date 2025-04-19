@@ -69,7 +69,7 @@ export async function main(ns) {
         } else if (members.length == 12 && gangdata.str > 500 && !fullup){
           ns.gang.setMemberTask(members[i], "Human Trafficking");
         } else if (members.length == 12 && gangdata.str > 500 && fullup){
-          if (mypower < maxpower * 4){
+          if (mypower < maxpower * 4 && mygang.territory < 1){
             ns.gang.setTerritoryWarfare(false);
             ns.gang.setMemberTask(members[i], "Territory Warfare");
           } else {

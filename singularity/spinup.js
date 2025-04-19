@@ -60,7 +60,7 @@ export async function main(ns) {
                 ns.singularity.purchaseTor();
                 hasTor = true;
             }
-            if (curCash > ns.singularity.getUpgradeHomeRamCost()){
+            if (curCash > ns.singularity.getUpgradeHomeRamCost() && ns.getServerMaxRam("home") < 1048576){
                 ns.singularity.upgradeHomeRam();
             }
             if (curCash > ns.singularity.getUpgradeHomeCoresCost()){
