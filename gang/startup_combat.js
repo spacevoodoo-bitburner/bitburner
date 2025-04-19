@@ -76,8 +76,8 @@ export async function main(ns) {
             ns.gang.setMemberTask(members[i], "Human Trafficking");
             ns.gang.setTerritoryWarfare(true);
           }
-          let asc = ns.gang.getAscensionResult(members[i]);
-          if (asc.str >= 2 || asc.cha >= 2 || asc.def >= 2 || asc.agi >= 2 || asc.dex >= 2 || asc.hack >= 2){
+          let ascr = await ns.gang.getAscensionResult(members[i]);
+          if (ascr.str >= 2 || ascr.cha >= 2 || ascr.def >= 2 || ascr.agi >= 2 || ascr.dex >= 2 || ascr.hack >= 2){
             ns.gang.ascendMember(members[i]);
           }
         }
