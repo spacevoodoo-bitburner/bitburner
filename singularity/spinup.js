@@ -15,7 +15,7 @@ export async function main(ns) {
         } else if (ns.getServerMaxRam("home") >= 4096 && ns.getServerMaxRam("home") < 32768){
             ns.exec("/hive/swarm.js", "home", 1, 65536, 16, 10, 2000);
         } else if (ns.getServerMaxRam("home") >= 32768 && ns.getServerMaxRam("home") < 262144){
-            ns.exec("/hive/swarm.js", "home", 1, 524288, 64, 100, 500);
+            ns.exec("/hive/swarm.js", "home", 1, 524288, 64, 100, 1000);
         } else if (ns.getServerMaxRam("home") >= 262144){
             ns.exec("/hive/swarm.js", "home", 1, 5242880, 256, 100, 100);
         }
