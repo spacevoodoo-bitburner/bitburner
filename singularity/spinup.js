@@ -1,0 +1,111 @@
+export async function main(ns) {
+    let iskilling = false;
+    let inSlumSnakes = false;
+    let karma = 0;
+    let dwPrograms = ns.singularity.getDarkwebPrograms();
+    let hasTor = false;
+    let hiveresets = 0;
+
+    ns.singularity.commitCrime("Mug");
+
+    if (ns.args.includes("hive")){
+        if (ns.getServerMaxRam("home") < 4096){
+            ns.exec("/hive/swarm.js", "home", 1, 8192, 1, 2, 5000);
+        } else if (ns.getServerMaxRam("home") >= 4096 && ns.getServerMaxRam("home") < 32768){
+            ns.exec("/hive/swarm.js", "home", 1, 65536, 16, 10, 2000);
+        } else if (ns.getServerMaxRam("home") >= 32768 && ns.getServerMaxRam("home") < 262144){
+            ns.exec("/hive/swarm.js", "home", 1, 524288, 64, 100, 500);
+        } else if (ns.getServerMaxRam("home") >= 262144){
+            ns.exec("/hive/swarm.js", "home", 1, 5242880, 256, 100, 100);
+        }
+    }
+    if (ns.args.includes("gang")){
+        ns.exec("/gang/startup_combat.js", "home");
+        ns.exec("/sleeve/murderhobos.js", "home");
+    }
+
+    while (true){
+        await ns.sleep(200);
+        let curCash = ns.getServerMoneyAvailable("home");
+        let availableFactions = ns.singularity.checkFactionInvitations();
+        karma = ns.heart.break();
+
+        if (ns.args.includes("gang")){
+            if(!inSlumSnakes && availableFactions.includes("Slum Snakes")){
+                ns.singularity.joinFaction("Slum Snakes");
+                inSlumSnakes = true;
+            }
+            let murderchance = ns.singularity.getCrimeChance("Homicide");
+            if (!iskilling && karma > -54000 && murderchance > 0.6){
+                ns.singularity.commitCrime("Homicide");
+                iskilling = true;
+            }
+            if (iskilling && karma <= -54000){
+                ns.singularity.commitCrime("Mug");
+                ns.scriptKill("/sleeve/murderhobos.js", "home");
+                ns.exec("/sleeve/trainup.js", "home");
+                iskilling = false;
+            }
+        }
+
+        if (ns.args.includes("hive")){
+            if (curCash > 200000 && !hasTor){
+                ns.singularity.purchaseTor();
+                hasTor = true;
+            }
+            if (curCash > ns.singularity.getUpgradeHomeRamCost()){
+                ns.singularity.upgradeHomeRam();
+            }
+            if (curCash > ns.singularity.getUpgradeHomeCoresCost()){
+                ns.singularity.upgradeHomeCores();
+            }
+            for (let i = 0; i < dwPrograms.length; ++i){
+                let programCost = ns.singularity.getDarkwebProgramCost(dwPrograms[i]);
+                if (programCost > 0 && curCash > programCost){
+                    ns.singularity.purchaseProgram(dwPrograms[i]);
+                }
+            }
+
+            if (ns.getServerMaxRam("home") >= 4096 && ns.getServerMaxRam("home") < 32768 && hiveresets == 0){
+                ns.exec("/basic/killall.js", "home");
+                ns.killall("home", true);
+                if (ns.args.includes("gang")){
+                    ns.exec("/gang/startup_combat.js", "home");
+                    if (karma > -54000){
+                        ns.exec("/sleeve/murderhobos.js", "home");
+                    }
+                }
+                ns.exec("/hive/swarm.js", "home", 1, 65536, 16, 10, 2000);
+                hiveresets += 1;
+            } else if (ns.getServerMaxRam("home") >= 32768 && ns.getServerMaxRam("home") < 262144 && hiveresets == 1){
+                ns.exec("/basic/killall.js", "home");
+                ns.killall("home", true);
+                if (ns.args.includes("gang")){
+                    ns.exec("/gang/startup_combat.js", "home");
+                    if (karma > -54000){
+                        ns.exec("/sleeve/murderhobos.js", "home");
+                    }
+                }
+                ns.exec("/hive/swarm.js", "home", 1, 524288, 64, 100, 500);
+                hiveresets += 1;
+            } else if (ns.getServerMaxRam("home") >= 262144 && hiveresets == 2){
+                ns.exec("/basic/killall.js", "home");
+                ns.killall("home", true);
+                if (ns.args.includes("gang")){
+                    ns.exec("/gang/startup_combat.js", "home");
+                    if (karma > -54000){
+                        ns.exec("/sleeve/murderhobos.js", "home");
+                    }
+                }
+                ns.exec("/hive/swarm.js", "home", 1, 5242880, 256, 100, 100);
+                hiveresets += 1;
+            }
+        }
+
+        if (ns.args.includes("bladeburner")){
+            if (!ns.args.includes("gang") || karma <= -54000){
+                
+            }
+        }
+    }
+}

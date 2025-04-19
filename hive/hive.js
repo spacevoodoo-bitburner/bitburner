@@ -16,6 +16,7 @@ export async function main(ns) {
   let purchasedservers = [];
   let targets = [];
   const host = ns.getHostname();
+  let port = 1;
   for (let i = 0; i < servers.length; ++i){
     let serv = servers[i]["name"];
     if (serv.includes("pserv")){
@@ -28,7 +29,7 @@ export async function main(ns) {
   let freeram = ns.getServerMaxRam(host) - ns.getServerUsedRam(host);
   let usedram = ns.getServerUsedRam(host);
   let scriptram = ns.getScriptRam("/hive/worker.js", host);
-  let port = 1;
+  
 
   let hackports = [];
   let growports = [];
@@ -52,8 +53,12 @@ export async function main(ns) {
       probstring = await queenbee(ns);
       probs = JSON.parse(probstring);
     }
+    let memReserve = 1;
+    if (ns.args[0] > 1){
+      memReserve = targets.length;
+    }
     //if there is enough room for more workers, the hive is allowed to make more workers.  Otherwise wait.
-    if (usedram < ns.getServerMaxRam(host) - scriptram * targets.length * ns.args[0]){
+    if (usedram < ns.getServerMaxRam(host) - scriptram * memReserve * ns.args[0]){
     //generate a random number and check against probs to see which hack function will be performed
       let rand = Math.random();
       let prob1 = probs[0]["probability"];

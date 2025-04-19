@@ -1,6 +1,5 @@
 import { scanall } from "/basic/scanner.js";
 
-/** @param {NS} ns */
 export async function main(ns) {
   const servers = await scanall(ns);
   const pservers = ns.getPurchasedServers();
@@ -9,22 +8,9 @@ export async function main(ns) {
   }
   for (let i = 0; i < servers.length; ++i){
     let target = servers[i]["name"];
-    if (ns.fileExists("BruteSSH.exe", "home")) {
-      ns.brutessh(target);
-    }
-    if (ns.fileExists("FTPCrack.exe", "home")) {
-      ns.ftpcrack(target);
-    }
-    if (ns.fileExists("relaySMTP.exe", "home")) {
-      ns.relaysmtp(target);
-    }
-    if (ns.fileExists("HTTPWorm.exe", "home")) {
-      ns.httpworm(target);
-    }
-    if (ns.fileExists("SQLInject.exe", "home")) {
-      ns.sqlinject(target);
-    }
-    ns.nuke(target);
     ns.killall(target, true);
+  }
+  for (let i = 1; i < 500000; ++i){
+    ns.clearPort(i);
   }
 }
