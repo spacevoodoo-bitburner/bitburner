@@ -8,6 +8,7 @@ export async function main(ns) {
 
     ns.singularity.commitCrime("Mug");
 
+    //if the hive is enabled, start it up with parameters appropriate to server size
     if (ns.args.includes("hive")){
         if (ns.getServerMaxRam("home") < 4096){
             ns.exec("/hive/swarm.js", "home", 1, 8192, 1, 2, 5000);
@@ -19,6 +20,8 @@ export async function main(ns) {
             ns.exec("/hive/swarm.js", "home", 1, 5242880, 256, 100, 100);
         }
     }
+
+    //if gang is enabled start up gang script and set sleeves to karma farming
     if (ns.args.includes("gang")){
         ns.exec("/gang/startup_combat.js", "home");
         ns.exec("/sleeve/murderhobos.js", "home");
@@ -30,6 +33,9 @@ export async function main(ns) {
         let availableFactions = ns.singularity.checkFactionInvitations();
         karma = ns.heart.break();
 
+        //if gang is enabled, check each cycle to see if you meet the requirements to start a gang.  If you don't
+        //do the thing you need to do to meet those requirements.  If you do, then the gang script has already started one
+        //so switch back to default behaviors.
         if (ns.args.includes("gang")){
             if(!inSlumSnakes && availableFactions.includes("Slum Snakes")){
                 ns.singularity.joinFaction("Slum Snakes");
@@ -48,6 +54,7 @@ export async function main(ns) {
             }
         }
 
+        //if the hive is enabled then perform upgrades and resets as necessary to keep it running optimally
         if (ns.args.includes("hive")){
             if (curCash > 200000 && !hasTor){
                 ns.singularity.purchaseTor();
@@ -101,7 +108,8 @@ export async function main(ns) {
                 hiveresets += 1;
             }
         }
-
+        
+        //if bladeburner is enabled, set sleeves to support bladeburner activities and run bladeburner script when appropriate
         if (ns.args.includes("bladeburner")){
             if (!ns.args.includes("gang") || karma <= -54000){
                 

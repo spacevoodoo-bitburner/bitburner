@@ -4,20 +4,29 @@ export async function main(ns) {
   let karma = ns.heart.break();
   let othergangarray = ["Speakers for the Dead", "The Syndicate", "NiteSec", "The Black Hand", "The Dark Army"];
   
+  //if you don't meet the karma requirements to start a gang then wait until you do
   while (karma > -54000){
     karma = ns.heart.break();
     ns.tprint(karma);
     await ns.sleep(600000)
   }
+  //If you meet the requirements but aren't in a gang then create one and recruit the first 3 members
   if (!ns.gang.inGang()){
     ns.gang.createGang("Slum Snakes");
     ns.gang.recruitMember("Bumble");
     ns.gang.recruitMember("Killer");
     ns.gang.recruitMember("Mason");
   }
+  //If you are in a gang then do gang stuff
   while (karma <= -54000 && ns.gang.inGang()){
     let equipment = ns.gang.getEquipmentNames();
     let members = ns.gang.getMemberNames();
+    //true if all non-augmentation equipment has been purchased for all members.  False otherwise.
+    //note: once you start buying augmentations, this no longer functions because the max equipment count
+    //is hard coded.  This doesn't actually matter though because once you are buying augs you have enough money
+    //to fully equip every member on each ascenssion, which the script still handles fine, so the fullup check
+    //really only matters in the early game before you are pulling in billions per second to help you split your
+    //attention appropriately between money and power farming.
     let fullup = true;
     for (let i = 0; i < members.length; ++i){
       let gangdata = ns.gang.getMemberInformation(members[i]);
@@ -25,6 +34,8 @@ export async function main(ns) {
         fullup = false;
       }
     }
+
+    //track the power of the other gangs so you know when to enable clashes
     let otherganginfo = ns.gang.getOtherGangInformation();
     let maxpower = 0;
     for (let i = 0; i < othergangarray.length; ++i){
@@ -34,6 +45,13 @@ export async function main(ns) {
     }
     let mygang = ns.gang.getGangInformation();
     let mypower = mygang.power;
+
+    //if a gang member is too weak to do things, train/ascend them until they are useful.
+    //if they are useful and the gang isn't full yet, set them to reputation farming.
+    //if they are useful and the gang is full, but somebody isn't fully equipped, set them to money farming.
+    //if they are useful, fully equipped, and fully manned, set to territory warfare until you are ready to take over
+    //if you are ready to take over, set back to cash farming so your mooks don't die and enable territory clashes
+    //Don't ascend again after train up until everything else is squared away.  If everyone is good, ascend each time it would double a multiplier
     for (let i = 0; i < members.length; ++i){
       let gangdata = ns.gang.getMemberInformation(members[i]);
       if (gangdata.dex >= 110 && gangdata.str_asc_mult == 1){
@@ -70,10 +88,14 @@ export async function main(ns) {
         }
       }
     }
+
+    //recruit if you can and aren't full.
     if (members.length < 12 && ns.gang.canRecruitMember()){
       ns.gang.recruitMember(mooks[mookindex]);
       mookindex += 1;
     }
+
+    //Buy anything you can afford for anyone who doesn't have it so long as they have completed their initial training cycles
     for (let i = 0; i < members.length; ++i){
       let gangdata = ns.gang.getMemberInformation(members[i]);
       if (gangdata.str_asc_mult >= 4){
