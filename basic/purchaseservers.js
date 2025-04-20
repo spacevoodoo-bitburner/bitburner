@@ -9,9 +9,8 @@ export async function main(ns) {
         ns.scp("/hive/worker.js", "pserv-" + i);
         ns.scp("/basic/scanner.js", "pserv-" + i);
         ns.scp("/hive/queen.js", "pserv-" + i);
-        ns.exec("/hive/queen.js", "pserv-" + i, 1, 1000);
-        await ns.sleep(500);
-        ns.exec("/hive/hive.js", "pserv-" + i, 1, 1, 2, 5000);
+        await ns.exec("/hive/queen.js", "pserv-" + i, 1, 1000);
+        await ns.exec("/hive/hive.js", "pserv-" + i, 1, 1, 2, 5000);
         ++i;
       }
       await ns.sleep(1000);
