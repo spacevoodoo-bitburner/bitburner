@@ -11,7 +11,7 @@ export async function main(ns) {
         ns.scp("/hive/queen.js", "pserv-" + i);
         ns.exec("/hive/queen.js", "pserv-" + i, 1, 1000);
         await ns.sleep(100);
-        ns.exec("/hive/hive.js", "pserv-" + i, 8192, 1, 2, 5000);
+        ns.exec("/hive/hive.js", "pserv-" + i, 1, 2, 5000);
         ++i;
       }
       await ns.sleep(1000);
