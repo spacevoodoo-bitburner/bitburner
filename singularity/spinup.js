@@ -74,6 +74,12 @@ export async function main(ns) {
             ns.singularity.universityCourse("ZB Institute of Technology", "Algorithms");
             goingForCrash = true;
         }
+        if (goingForCrash && ns.args.includes("autocrash")){
+            let crashDifficulty = ns.getServerRequiredHackingLevel("w0r1d_d43m0n");
+            if (crashDifficulty <= ns.getHackingLevel()){
+                ns.singularity.destroyW0r1dD43m0n(ns.args[1], "/singularity/newnode.js");
+            }
+        }
 
         //if gang is enabled, check each cycle to see if you meet the requirements to start a gang.  If you don't
         //do the thing you need to do to meet those requirements.  If you do, then the gang script has already started one
