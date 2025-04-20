@@ -60,7 +60,24 @@ export async function scanall(ns){
     let targets = [];
     for (let i = 0; i < servers.length; ++i){
       if (servers[i]["difficulty"] <= hackskill && servers[i]["ports"] <= numPortsCanCrack){
-        targets.push(servers[i]);
+        let target = servers[i];
+        targets.push(target);
+        if (ns.fileExists("BruteSSH.exe", "home")) {
+          ns.brutessh(target["name"]);
+        }
+        if (ns.fileExists("FTPCrack.exe", "home")) {
+          ns.ftpcrack(target["name"]);
+        }
+        if (ns.fileExists("relaySMTP.exe", "home")) {
+          ns.relaysmtp(target["name"]);
+        }
+        if (ns.fileExists("HTTPWorm.exe", "home")) {
+          ns.httpworm(target["name"]);
+        }
+        if (ns.fileExists("SQLInject.exe", "home")) {
+          ns.sqlinject(target["name"]);
+        }
+        ns.nuke(target["name"]);
       }
     }
   

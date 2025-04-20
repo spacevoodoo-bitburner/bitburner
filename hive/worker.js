@@ -4,26 +4,7 @@ export async function main(ns) {
     ns.writePort(ns.args[2], waggle);
   }
   
-  export async function workerbee(ns, hackfunction, target){
-    //crack the server if applicable.  Most servers are hives but those with
-    //0GB RAM will need to be cracked by the workers.
-    if (ns.fileExists("BruteSSH.exe", "home")) {
-      ns.brutessh(target);
-    }
-    if (ns.fileExists("FTPCrack.exe", "home")) {
-      ns.ftpcrack(target);
-    }
-    if (ns.fileExists("relaySMTP.exe", "home")) {
-      ns.relaysmtp(target);
-    }
-    if (ns.fileExists("HTTPWorm.exe", "home")) {
-      ns.httpworm(target);
-    }
-    if (ns.fileExists("SQLInject.exe", "home")) {
-      ns.sqlinject(target);
-    }
-    ns.nuke(target);
-  
+  export async function workerbee(ns, hackfunction, target){  
     //if the worker is told to hack, execute a hack function and report
     //cash/second as the waggle
     if (hackfunction === "hack"){

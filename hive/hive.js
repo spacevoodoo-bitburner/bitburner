@@ -24,6 +24,7 @@ export async function main(ns) {
     } else if (serv == "home"){} else {
       targets.push(servers[i]);
     }
+    //ns.exec("/singularity/backdoor.js", host, 1, servers[i]["name"]);
   }
   //figure out how much room you have for workers and initialize starting values
   let freeram = ns.getServerMaxRam(host) - ns.getServerUsedRam(host);
