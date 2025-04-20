@@ -8,6 +8,7 @@ export async function main(ns) {
     let curCash = ns.getServerMoneyAvailable("home");
     let hasTor = false;
     let hiveresets = 0;
+    let goingForCrash = false;
     if (curCash > 200000 && !hasTor){
         ns.singularity.purchaseTor();
         hasTor = true;
@@ -45,6 +46,7 @@ export async function main(ns) {
 
     while (true){
         await ns.sleep(200);
+        let ownedAugs = ns.singularity.getOwnedAugmentations();
         curCash = ns.getServerMoneyAvailable("home");
         let availableFactions = ns.singularity.checkFactionInvitations();
         karma = ns.heart.break();
@@ -65,6 +67,12 @@ export async function main(ns) {
                 ns.singularity.purchaseAugmentation("Daedalus", "The Red Pill");
                 ns.singularity.installAugmentations("/singularity/postaug.js");
             }
+        }
+        if (ownedAugs.includes("The Red Pill") && !goingForCrash){
+            ns.exec("/sleeve/trainhack.js", "home");
+            ns.singularity.travelToCity("Volhaven");
+            ns.singularity.universityCourse("ZB Institute of Technology", "Algorithms");
+            goingForCrash = true;
         }
 
         //if gang is enabled, check each cycle to see if you meet the requirements to start a gang.  If you don't
@@ -88,7 +96,6 @@ export async function main(ns) {
             }
             if (karma <= -54000){
                 let gangAugs = ns.singularity.getAugmentationsFromFaction("Slum Snakes");
-                let ownedAugs = ns.singularity.getOwnedAugmentations();
                 let totalAugCost = 0;
                 for (let i = 0; i < gangAugs.length; ++i){
                     if (!ownedAugs.includes(gangAugs[i])){
