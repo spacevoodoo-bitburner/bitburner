@@ -1,6 +1,6 @@
 /** @param {NS} ns */
 export async function main(ns) {
-    const ram = 8;
+    const ram = 32;
     let i = ns.getPurchasedServers().length;
     while (i < ns.getPurchasedServerLimit()) {
       if (ns.getServerMoneyAvailable("home") > ns.getPurchasedServerCost(ram)) {
@@ -11,7 +11,7 @@ export async function main(ns) {
         ns.scp("/hive/queen.js", "pserv-" + i);
         ns.exec("/hive/queen.js", "pserv-" + i, 1, 1000);
         await ns.sleep(100);
-        ns.exec("/hive/hive.js", "pserv-" + i, 1, 2, 100);
+        ns.exec("/hive/hive.js", "pserv-" + i, 8192, 1, 2, 5000);
         ++i;
       }
       await ns.sleep(1000);
