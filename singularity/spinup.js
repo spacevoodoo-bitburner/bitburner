@@ -1,6 +1,8 @@
 export async function main(ns) {
     let iskilling = false;
     let inSlumSnakes = false;
+    let inDaedalus = false;
+    let isWorking = false;
     let karma = 0;
     let dwPrograms = ns.singularity.getDarkwebPrograms();
     let hasTor = false;
@@ -33,6 +35,24 @@ export async function main(ns) {
         let availableFactions = ns.singularity.checkFactionInvitations();
         karma = ns.heart.break();
 
+        if (availableFactions.includes("Daedalus") && !inDaedalus){
+            ns.singularity.joinFaction("Daedalus");
+            inDaedalus = true;
+        }
+        if (inDaedalus && !isWorking){
+            ns.singularity.workForFaction("Daedalus", "field");
+            ns.sleeve.setToFactionWork(0, "Daedalus", "field");
+            isWorking = true;
+        }
+        if (inDaedalus && isWorking){
+            let redpillrep = ns.singularity.getAugmentationRepReq("The Red Pill");
+            let curDaedalusRep = ns.singularity.getFactionRep("Daedalus");
+            if (curDaedalusRep >= redpillrep){
+                ns.singularity.purchaseAugmentation("The Red Pill");
+                ns.singularity.installAugmentations();
+            }
+        }
+
         //if gang is enabled, check each cycle to see if you meet the requirements to start a gang.  If you don't
         //do the thing you need to do to meet those requirements.  If you do, then the gang script has already started one
         //so switch back to default behaviors.
@@ -52,6 +72,34 @@ export async function main(ns) {
                 ns.exec("/sleeve/trainup.js", "home");
                 iskilling = false;
             }
+            if (karma <= -54000){
+                let gangAugs = ns.singularity.getAugmentationsFromFaction("Slum Snakes");
+                let ownedAugs = ns.singularity.getOwnedAugmentations();
+                let totalAugCost = 0;
+                for (let i = 0; i < gangAugs.length; ++i){
+                    if (!ownedAugs.includes(gangAugs[i])){
+                        let augCost = ns.singularity.getAugmentationPrice(gangAugs[i]);
+                        totalAugCost += augCost;
+                    }
+                }
+                if (curCash > totalAugCost){
+                    for (let i = 0; i < gangAugs.length; ++i){
+                        curCash = ns.getServerMoneyAvailable("home");
+                        if (!ownedAugs.includes(gangAugs[i]) && curCash > ns.singularity.getAugmentationPrice(gangAugs[i])){
+                            ns.singularity.purchaseAugmentation("Slum Snakes", gangAugs[i]);
+                        }
+                    }
+                }
+                if (ns.args.includes("gangreset")){
+                    let hasAll = true;
+                    for (let i = 0; i < gangAugs.length; ++i){
+                        if (!ownedAugs.includes(gangAugs[i])){
+                            hasAll = false;
+                        }
+                    }
+                    ns.singularity.installAugmentations();
+                }
+            }
         }
 
         //if the hive is enabled then perform upgrades and resets as necessary to keep it running optimally
@@ -68,7 +116,7 @@ export async function main(ns) {
             }
             for (let i = 0; i < dwPrograms.length; ++i){
                 let programCost = ns.singularity.getDarkwebProgramCost(dwPrograms[i]);
-                if (programCost > 0 && curCash > programCost){
+                if (hasTor && curCash > programCost){
                     ns.singularity.purchaseProgram(dwPrograms[i]);
                 }
             }
