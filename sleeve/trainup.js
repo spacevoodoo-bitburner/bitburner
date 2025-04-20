@@ -14,8 +14,10 @@ export async function main(ns) {
     for (let i = 0; i < numSleeves; ++i){
         let action = actions[i];
         if (i < 4){
+            ns.sleeve.travel(i, "Sector-12");
             ns.sleeve.setToGymWorkout(i, "Powerhouse Gym", action);
         } else {
+            ns.sleeve.travel(i, "Volhaven");
             ns.sleeve.setToUniversityCourse(i, "ZB Institute of Technology", action);
         }
     }

@@ -5,9 +5,23 @@ export async function main(ns) {
     let isWorking = false;
     let karma = 0;
     let dwPrograms = ns.singularity.getDarkwebPrograms();
+    let curCash = ns.getServerMoneyAvailable("home");
     let hasTor = false;
     let hiveresets = 0;
-
+    if (curCash > 200000 && !hasTor){
+        ns.singularity.purchaseTor();
+        hasTor = true;
+    }
+    if (hasTor){
+        dwPrograms = ns.singularity.getDarkwebPrograms();
+        for (let i = 0; i < dwPrograms.length; ++i){
+            let programCost = ns.singularity.getDarkwebProgramCost(dwPrograms[i]);
+            if (hasTor && curCash > programCost){
+                ns.singularity.purchaseProgram(dwPrograms[i]);
+            }
+        }
+    }
+    
     ns.singularity.commitCrime("Mug");
 
     //if the hive is enabled, start it up with parameters appropriate to server size
@@ -31,7 +45,7 @@ export async function main(ns) {
 
     while (true){
         await ns.sleep(200);
-        let curCash = ns.getServerMoneyAvailable("home");
+        curCash = ns.getServerMoneyAvailable("home");
         let availableFactions = ns.singularity.checkFactionInvitations();
         karma = ns.heart.break();
 
@@ -48,8 +62,8 @@ export async function main(ns) {
             let redpillrep = ns.singularity.getAugmentationRepReq("The Red Pill");
             let curDaedalusRep = ns.singularity.getFactionRep("Daedalus");
             if (curDaedalusRep >= redpillrep){
-                ns.singularity.purchaseAugmentation("The Red Pill");
-                ns.singularity.installAugmentations();
+                ns.singularity.purchaseAugmentation("Daedalus", "The Red Pill");
+                ns.singularity.installAugmentations("/singularity/postaug.js");
             }
         }
 
@@ -97,7 +111,9 @@ export async function main(ns) {
                             hasAll = false;
                         }
                     }
-                    ns.singularity.installAugmentations();
+                    if (hasAll){
+                        ns.singularity.installAugmentations("singularity/postaug.js");
+                    }
                 }
             }
         }
@@ -154,13 +170,6 @@ export async function main(ns) {
                 }
                 ns.exec("/hive/swarm.js", "home", 1, 5242880, 256, 100, 100);
                 hiveresets += 1;
-            }
-        }
-        
-        //if bladeburner is enabled, set sleeves to support bladeburner activities and run bladeburner script when appropriate
-        if (ns.args.includes("bladeburner")){
-            if (!ns.args.includes("gang") || karma <= -54000){
-                
             }
         }
     }
