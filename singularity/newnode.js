@@ -6,5 +6,5 @@ export async function main(ns){
     }
     ns.exec("/basic/killall.js", "home");
     ns.killall("home", true);
-    ns.exec("/singularity/spinup.js", "home");
+    ns.exec("/singularity/spinup.js", "home", 1, "gang", "hive");
 }

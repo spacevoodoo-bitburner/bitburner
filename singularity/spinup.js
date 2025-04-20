@@ -65,7 +65,7 @@ export async function main(ns) {
             let curDaedalusRep = ns.singularity.getFactionRep("Daedalus");
             if (curDaedalusRep >= redpillrep){
                 ns.singularity.purchaseAugmentation("Daedalus", "The Red Pill");
-                ns.singularity.installAugmentations("/singularity/postaug.js");
+                ns.singularity.installAugmentations("/singularity/precrash.js");
             }
         }
         if (ownedAugs.includes("The Red Pill") && !goingForCrash){
