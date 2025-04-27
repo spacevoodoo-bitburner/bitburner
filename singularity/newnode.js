@@ -1,5 +1,5 @@
 export async function main(ns){
-    ns.exec("/singularity/nodestartup.js", "home", 1, 8192, 1, 2, 5000);
+    ns.exec("/singularity/nodestartup.js", "home");
     while (ns.getServerMaxRam("home") < 256){
         ns.singularity.upgradeHomeRam();
         await ns.sleep(1000);
