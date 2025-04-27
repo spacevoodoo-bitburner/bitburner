@@ -77,8 +77,8 @@ export async function main(ns) {
             ns.gang.setTerritoryWarfare(true);
           }
           let ascr = await ns.gang.getAscensionResult(members[i]);
-          if (ascr.str >= 2 || ascr.cha >= 2 || ascr.def >= 2 || ascr.agi >= 2 || ascr.dex >= 2 || ascr.hack >= 2){
-            ns.gang.ascendMember(members[i]);
+          if (ascr.str >= 2 || ascr.def >= 2 || ascr.agi >= 2 || ascr.dex >= 2){
+            await ns.gang.ascendMember(members[i]);
           }
         }
         else if (gangdata.str < 500) {

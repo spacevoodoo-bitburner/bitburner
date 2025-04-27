@@ -27,8 +27,8 @@ export async function main(ns) {
 
     //if the hive is enabled, start it up with parameters appropriate to server size
     if (ns.args.includes("hive")){
-        if (ns.getServerMaxRam("home") < 4096){
-            ns.exec("/hive/swarm.js", "home", 1, 8192, 1, 2, 5000);
+        if (ns.getServerMaxRam("home") < 1024){
+            ns.exec("/hive/swarm.js", "home", 1, 2048, 1, 2, 5000);
         } else if (ns.getServerMaxRam("home") >= 4096 && ns.getServerMaxRam("home") < 32768){
             ns.exec("/hive/swarm.js", "home", 1, 65536, 16, 10, 2000);
         } else if (ns.getServerMaxRam("home") >= 32768 && ns.getServerMaxRam("home") < 262144){
@@ -80,6 +80,24 @@ export async function main(ns) {
                 ns.singularity.destroyW0r1dD43m0n(ns.args[1], "/singularity/newnode.js");
             }
         }
+        let numSleeves = ns.sleeve.getNumSleeves();
+        for (let i = 0; i < numSleeves; ++i){
+            let sleevedata = ns.sleeve.getSleeve(i);
+            if (sleevedata.shock > 0){
+                let sleeveaugs = ns.sleeve.getSleevePurchasableAugs(i);
+                let totalprice = 0;
+                for (let j = 0; j < sleeveaugs.length; ++j){
+                    let augprice = ns.sleeve.getSleeveAugmentationPrice(sleeveaugs[j]);
+                    totalprice += augprice;
+                }
+                if (curCash > totalprice){
+                    for (let j = 0; j < sleeveaugs.length; ++j){
+                        await ns.sleeve.purchaseSleeveAug(i, sleeveaugs[j]);
+                    }
+                }
+                curCash = ns.getServerMoneyAvailable("home");
+            }
+        }
 
         //if gang is enabled, check each cycle to see if you meet the requirements to start a gang.  If you don't
         //do the thing you need to do to meet those requirements.  If you do, then the gang script has already started one
@@ -109,24 +127,14 @@ export async function main(ns) {
                         totalAugCost += augCost;
                     }
                 }
-                if (curCash > totalAugCost){
+                if (totalAugCost > 0 && curCash > totalAugCost * 10){
                     for (let i = 0; i < gangAugs.length; ++i){
                         curCash = ns.getServerMoneyAvailable("home");
                         if (!ownedAugs.includes(gangAugs[i]) && curCash > ns.singularity.getAugmentationPrice(gangAugs[i])){
                             ns.singularity.purchaseAugmentation("Slum Snakes", gangAugs[i]);
                         }
                     }
-                }
-                if (ns.args.includes("gangreset")){
-                    let hasAll = true;
-                    for (let i = 0; i < gangAugs.length; ++i){
-                        if (!ownedAugs.includes(gangAugs[i])){
-                            hasAll = false;
-                        }
-                    }
-                    if (hasAll){
-                        ns.singularity.installAugmentations("singularity/postaug.js");
-                    }
+                    ns.singularity.installAugmentations("singularity/postaug.js");
                 }
             }
         }
@@ -150,7 +158,7 @@ export async function main(ns) {
                 }
             }
 
-            if (ns.getServerMaxRam("home") >= 4096 && ns.getServerMaxRam("home") < 32768 && hiveresets == 0){
+            if (ns.getServerMaxRam("home") >= 1024 && ns.getServerMaxRam("home") < 32768 && hiveresets == 0){
                 ns.exec("/basic/killall.js", "home");
                 ns.killall("home", true);
                 if (ns.args.includes("gang")){
