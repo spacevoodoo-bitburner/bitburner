@@ -5,7 +5,11 @@ export async function main(ns){
     let usehacknet = false;
     let usebladeburner = false;
     let hackToCrash = true;
+
+    //general
     let curCash = ns.getServerMoneyAvailable("home");
+
+    //hive
     let prevMaxRam = 0;
     let maxRam = 0;
 
@@ -21,10 +25,12 @@ export async function main(ns){
     if (usehive){
         maxRam = await spinUpHive(ns, true);
     }
-    await ns.sleep(500);
+
     while (true){
         if (usehive){
             if ((maxRam == 2048 || maxRam == 32768 || maxRam == 262144) && maxRam != prevMaxRam){
+                ns.exec("/basic/killall.js", "home");
+                await ns.killall("home", true);
                 maxRam = await spinUpHive(ns, true);
             } else {
                 maxRam = await spinUpHive(ns, false);
@@ -44,7 +50,8 @@ export async function main(ns){
 
         }
         await ns.sleep(30000);
-    } 
+    }
+    
 }
 
 async function nodeKiller_hack(ns){
@@ -125,16 +132,16 @@ async function spinUpHive(ns, doReset){
         ns.singularity.upgradeHomeCores();
     }
     if (doReset){
-        if (ns.getServerMaxRam("home") < 2048){
-            ns.exec("/hive/swarm.js", "home", 1, 4096, 1, 2, 5000);
-        } else if (ns.getServerMaxRam("home") >= 2048 && ns.getServerMaxRam("home") < 32768){
-            ns.exec("/hive/swarm.js", "home", 1, 65536, 16, 10, 2000);
-        } else if (ns.getServerMaxRam("home") >= 32768 && ns.getServerMaxRam("home") < 262144){
-            ns.exec("/hive/swarm.js", "home", 1, 524288, 64, 100, 1000);
-        } else if (ns.getServerMaxRam("home") >= 262144){
-            ns.exec("/hive/swarm.js", "home", 1, 5242880, 256, 100, 100);
-        }
-        return ns.getServerMaxRam("home");
+      if (ns.getServerMaxRam("home") < 2048){
+          ns.exec("/hive/swarm.js", "home", 1, 4096, 1, 2, 5000);
+      } else if (ns.getServerMaxRam("home") >= 2048 && ns.getServerMaxRam("home") < 32768){
+          ns.exec("/hive/swarm.js", "home", 1, 65536, 16, 10, 2000);
+      } else if (ns.getServerMaxRam("home") >= 32768 && ns.getServerMaxRam("home") < 262144){
+          ns.exec("/hive/swarm.js", "home", 1, 524288, 64, 100, 1000);
+      } else if (ns.getServerMaxRam("home") >= 262144){
+          ns.exec("/hive/swarm.js", "home", 1, 5242880, 256, 100, 100);
+      }
+      return ns.getServerMaxRam("home");
     }
 }
 
@@ -227,9 +234,9 @@ async function spinUpGang(ns){
                     let ascr = await ns.gang.getAscensionResult(members[i]);
                     await ns.sleep(500);
                     if (typeof ascr.str !== "undefined"){
-                        if (ascr.str >= 2 || ascr.def >= 2 || ascr.agi >= 2 || ascr.dex >= 2){
-                            await ns.gang.ascendMember(members[i]);
-                        }
+                      if (ascr.str >= 2 || ascr.def >= 2 || ascr.agi >= 2 || ascr.dex >= 2){
+                          await ns.gang.ascendMember(members[i]);
+                      }
                     }
                 }
                 else if (gangdata.str < 500) {
